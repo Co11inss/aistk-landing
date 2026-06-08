@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AISTK — Daily AI briefing for builders</title>
+<meta name="description" content="AISTK — What to build with. What to ignore. Every morning. No hype, just signal.">
+<style>
+  :root {
+    --bg: #06050a;
+    --surface: #0d0b1a;
+    --card: #13102b;
+    --border: #1e1845;
+    --accent: #7c3aed;
+    --accent-glow: #a78bfa;
+    --text: #e8e4f0;
+    --text-dim: #8b85a8;
+    --green: #34d399;
+    --red: #f87171;
+    --amber: #fbbf24;
+    --font-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Ambient background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% -20%, rgba(124,58,237,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 80%, rgba(52,211,153,0.04) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Subtle grid */
+  .grid-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+    animation: gridPulse 8s ease-in-out infinite;
+  }
+  @keyframes gridPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  .container { max-width: 720px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* Hero */
+  .hero {
+    padding: 100px 0 80px;
+    text-align: center;
+    position: relative;
+  }
+
+  /* Terminal badge */
+  .terminal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 16px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 28px;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeUp 0.6s 0.1s ease-out forwards;
+  }
+  .terminal-badge .prompt { color: var(--green); }
+  .terminal-badge .cmd { color: var(--accent-glow); }
+  .terminal-badge .cursor {
+    display: inline-block;
+    width: 8px; height: 16px;
+    background: var(--accent-glow);
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  .hero h1 {
+    font-size: 56px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1.05;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(15px);
+    animation: fadeUp 0.6s 0.25s ease-out forwards;
+  }
+  .hero h1 .aistk {
+    background: linear-gradient(135deg, #c4b5fd 0%, #7c3aed 40%, #a78bfa 70%, #c4b5fd 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s ease-in-out infinite;
+  }
+  @keyframes shimmer { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+  .hero .tagline {
+    font-size: 20px;
+    color: var(--text-dim);
+    max-width: 520px;
+    margin: 0 auto 36px;
+    line-height: 1.5;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeUp 0.6s 0.4s ease-out forwards;
+  }
+
+  /* Signup form */
+  .signup-wrapper {
+    max-width: 460px;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeUp 0.6s 0.55s ease-out forwards;
+  }
+  .signup-form {
+    display: flex;
+    gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 6px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .signup-form:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+  }
+  .signup-form input {
+    flex: 1;
+    padding: 14px 16px;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-size: 15px;
+    font-family: var(--font-sans);
+    outline: none;
+  }
+  .signup-form input::placeholder { color: #4a4570; }
+  .signup-form button {
+    padding: 14px 24px;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+  }
+  .signup-form button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.4s;
+  }
+  .signup-form button:hover::after { transform: translateX(100%); }
+  .signup-form button:hover {
+    background: #6d28d9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(124,58,237,0.3);
+  }
+  .signup-form button:active { transform: translateY(0) scale(0.98); }
+
+  .social-proof {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--text-dim);
+    text-align: center;
+  }
+
+  /* Section headers */
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent-glow);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 36px;
+  }
+
+  /* Preview card */
+  .preview { padding: 80px 0; }
+  .issue-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .issue-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px rgba(124,58,237,0.08);
+  }
+  .issue-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(124,58,237,0.04);
+  }
+  .issue-header .issue-num {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--accent-glow);
+  }
+  .issue-header .issue-date {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+  }
+  .issue-body { padding: 24px; }
+  .story-block {
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.2s;
+  }
+  .story-block:last-child { border-bottom: none; }
+  .story-block:hover { background: rgba(124,58,237,0.03); margin: 0 -12px; padding: 16px 12px; border-radius: 6px; }
+  .story-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .story-tag.lead { background: rgba(248,113,113,0.12); color: var(--red); }
+  .story-tag.tool { background: rgba(52,211,153,0.12); color: var(--green); }
+  .story-tag.paper { background: rgba(124,58,237,0.15); color: var(--accent-glow); }
+  .story-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .story-meta {
+    font-size: 13px;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+  }
+
+  /* Value props */
+  .value-props {
+    padding: 80px 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .prop {
+    text-align: center;
+    padding: 36px 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .prop::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .prop:hover::before { opacity: 1; }
+  .prop:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(124,58,237,0.06);
+    border-color: rgba(124,58,237,0.3);
+  }
+  .prop .icon { font-size: 36px; margin-bottom: 16px; display: block; }
+  .prop h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; font-family: var(--font-mono); color: var(--accent-glow); letter-spacing: 0.5px; }
+  .prop p { font-size: 14px; color: var(--text-dim); line-height: 1.5; }
+
+  /* Stats bar */
+  .stats-bar {
+    padding: 40px 0;
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat { text-align: center; }
+  .stat .number {
+    font-family: var(--font-mono);
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--accent-glow);
+    letter-spacing: -1px;
+  }
+  .stat .label {
+    font-size: 12px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 4px;
+  }
+
+  /* Pricing */
+  .pricing {
+    padding: 80px 0;
+    text-align: center;
+  }
+  .pricing-cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  .pricing-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px 32px;
+    text-align: left;
+    max-width: 340px;
+    flex: 1;
+    transition: all 0.3s;
+  }
+  .pricing-card.featured {
+    border-color: var(--accent);
+    box-shadow: 0 0 30px rgba(124,58,237,0.1);
+    position: relative;
+  }
+  .pricing-card.featured::before {
+    content: 'POPULAR';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 14px;
+    border-radius: 20px;
+  }
+  .pricing-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(124,58,237,0.1);
+  }
+  .plan-name {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent-glow);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .plan-price {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+  }
+  .plan-price span { font-size: 15px; font-weight: 400; color: var(--text-dim); }
+  .plan-features { list-style: none; margin-bottom: 24px; }
+  .plan-features li {
+    padding: 8px 0;
+    font-size: 14px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .plan-features li::before {
+    content: '→';
+    color: var(--green);
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+  .plan-cta {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid var(--accent);
+    font-size: 15px;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+    color: var(--accent-glow);
+  }
+  .plan-cta:hover {
+    background: var(--accent);
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(124,58,237,0.25);
+  }
+  .featured .plan-cta {
+    background: var(--accent);
+    color: #fff;
+  }
+  .featured .plan-cta:hover { background: #6d28d9; }
+
+  /* Footer */
+  footer {
+    padding: 48px 0;
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+  footer .build-info {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  footer .build-info span { color: var(--green); }
+
+  /* Scroll animations */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .hero h1 { font-size: 38px; }
+    .signup-form { flex-direction: column; }
+    .value-props { grid-template-columns: 1fr; }
+    .pricing-cards { flex-direction: column; align-items: center; }
+    .stats-bar { gap: 28px; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-overlay"></div>
+
+<div class="container">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="terminal-badge">
+      <span class="prompt">$</span>
+      <span class="cmd">./aistk --subscribe</span>
+      <span class="cursor"></span>
+    </div>
+    <h1><span class="aistk">AISTK</span></h1>
+    <p class="tagline">
+      What to build with. What to ignore.<br>
+      One signal-dense email every morning. No hype.
+    </p>
+
+    <div class="signup-wrapper">
+      <form
+        class="signup-form"
+        action="https://buttondown.email/api/emails/embed-subscribe/aistack"
+        method="post"
+        target="popupwindow"
+        onsubmit="window.open('https://buttondown.email/aistack', 'popupwindow')">
+        <input type="email" name="email" placeholder="you@example.com" required>
+        <button type="submit">Subscribe →</button>
+      </form>
+      <p class="social-proof">Free daily briefing. No spam. Unsubscribe anytime.</p>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="stats-bar reveal">
+    <div class="stat">
+      <div class="number">200+</div>
+      <div class="label">Sources Monitored</div>
+    </div>
+    <div class="stat">
+      <div class="number">979</div>
+      <div class="label">Items Collected Today</div>
+    </div>
+    <div class="stat">
+      <div class="number">3 min</div>
+      <div class="label">Reading Time</div>
+    </div>
+    <div class="stat">
+      <div class="number">100%</div>
+      <div class="label">Automated</div>
+    </div>
+  </div>
+
+  <!-- Preview: Latest Issue -->
+  <section class="preview reveal">
+    <p class="section-label">// latest build</p>
+    <h2 class="section-title">Here's what shipped today</h2>
+    <div class="issue-card">
+      <div class="issue-header">
+        <span class="issue-num">$ cat issue-0042.md</span>
+        <span class="issue-date">Mon Jun 09 2026</span>
+      </div>
+      <div class="issue-body">
+        <div class="story-block">
+          <span class="story-tag lead">BREAKING</span>
+          <div class="story-title">DeepSeek v4 drops — beats GPT-5 on reasoning benchmarks</div>
+          <div class="story-meta">openai.com • 847 points</div>
+        </div>
+        <div class="story-block">
+          <span class="story-tag tool">RELEASE</span>
+          <div class="story-title">OpenWeight: A 7B model that runs on your phone, no cloud needed</div>
+          <div class="story-meta">github.com/openweight • ★ 3,241</div>
+        </div>
+        <div class="story-block">
+          <span class="story-tag paper">PAPER</span>
+          <div class="story-title">Scaling Laws for Tool-Augmented Language Agents</div>
+          <div class="story-meta">arXiv:2406 • Grattafiori et al.</div>
+        </div>
+        <div class="story-block">
+          <span class="story-tag tool">RELEASE</span>
+          <div class="story-title">Hermes Agent: The open-source AI agent that actually ships</div>
+          <div class="story-meta">nousresearch.com • Community launch</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Value Props -->
+  <section class="value-props reveal">
+    <div class="prop">
+      <span class="icon">🔍</span>
+      <h3>signal.exe</h3>
+      <p>We monitor 200+ sources so you don't have to. Only the tools and papers worth your time make the cut.</p>
+    </div>
+    <div class="prop">
+      <span class="icon">⚡</span>
+      <h3>build()</h3>
+      <p>Designed for your morning coffee window. Dense, skimmable, actionable. Built by builders, for builders.</p>
+    </div>
+    <div class="prop">
+      <span class="icon">🤖</span>
+      <h3>cron.d</h3>
+      <p>Fully automated pipeline. Curated by AI agents, reviewed by humans. Ships every morning at 0600 UTC.</p>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="pricing reveal">
+    <p class="section-label">// pricing</p>
+    <h2 class="section-title">Start free, upgrade when you're shipping</h2>
+    <div class="pricing-cards">
+      <div class="pricing-card">
+        <p class="plan-name">Free Tier</p>
+        <p class="plan-price">$0<span>/forever</span></p>
+        <ul class="plan-features">
+          <li>Daily briefing every weekday</li>
+          <li>Curated tools &amp; releases</li>
+          <li>Quick hits section</li>
+          <li>Public archive access</li>
+        </ul>
+        <button class="plan-cta" onclick="document.querySelector('.signup-form input').focus()">Get started</button>
+      </div>
+      <div class="pricing-card featured">
+        <p class="plan-name">Pro</p>
+        <p class="plan-price">$15<span>/month</span></p>
+        <ul class="plan-features">
+          <li>Everything in Free</li>
+          <li>Deep-dive paper analysis</li>
+          <li>Early access (24h before free)</li>
+          <li>Private Discord community</li>
+          <li>Ad-free experience</li>
+        </ul>
+        <button class="plan-cta" onclick="document.querySelector('.signup-form input').focus()">Start free trial</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p class="build-info">
+      <span>$</span> ./aistk --status<br>
+      build: stable &nbsp;|&nbsp; uptime: 99.9% &nbsp;|&nbsp; deployed: aistk.io<br><br>
+      AISTK © 2026 — Built by builders, for builders.
+    </p>
+  </footer>
+
+</div>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Subtitle typewriter effect
+  const tagline = document.querySelector('.tagline');
+  const originalText = tagline.innerHTML;
+  tagline.innerHTML = '<span style="opacity:0">' + originalText + '</span>';
+
+  // Animate stats numbers
+  document.querySelectorAll('.stat .number').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(10px)';
+    el.style.transition = 'opacity 0.6s 0.3s, transform 0.6s 0.3s';
+  });
+
+  const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.number').forEach(el => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        });
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stats-bar').forEach(el => statsObserver.observe(el));
+</script>
+
+</body>
+</html>
