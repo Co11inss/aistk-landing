@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AISTK — Logo Options</title>
+<style>
+  :root {
+    --bg: #06050a;
+    --card: #0d0b1a;
+    --border: #1e1845;
+    --accent: #7c3aed;
+    --accent-glow: #a78bfa;
+    --text: #e8e4f0;
+    --text-dim: #8b85a8;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    padding: 40px;
+  }
+  h1 { font-size: 24px; margin-bottom: 8px; }
+  .sub { color: var(--text-dim); margin-bottom: 40px; font-size: 14px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-dim);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .card-header .tag {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(124,58,237,0.15);
+    color: var(--accent-glow);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  .card-body {
+    padding: 48px 32px;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 200px;
+  }
+  .card-body.dark { background: #06050a; }
+  .card-body.light { background: #f8f7ff; }
+
+  /* Logo 1: Terminal prompt */
+  .logo-terminal {
+    font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+  .logo-terminal .prompt { color: #34d399; }
+  .logo-terminal .name {
+    background: linear-gradient(135deg, #c4b5fd, #7c3aed, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .logo-terminal .cursor {
+    display: inline-block; width: 3px; height: 38px;
+    background: var(--accent-glow);
+    animation: blink 1s step-end infinite;
+    vertical-align: middle; margin-left: 4px;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* Logo 2: Stack blocks */
+  .logo-stack { display: flex; gap: 6px; align-items: flex-end; }
+  .logo-stack .block {
+    border-radius: 6px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-glow));
+  }
+  .logo-stack .block:nth-child(1) { width:28px; height:28px; opacity:0.35; }
+  .logo-stack .block:nth-child(2) { width:34px; height:44px; opacity:0.55; }
+  .logo-stack .block:nth-child(3) { width:40px; height:60px; opacity:0.75; }
+  .logo-stack .block:nth-child(4) { width:46px; height:76px; opacity:1; }
+  .logo-stack + .stack-label {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 22px; font-weight: 800; letter-spacing: 2px;
+    margin-left: 18px;
+    background: linear-gradient(135deg, #c4b5fd, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Logo 3: Code brackets */
+  .logo-brackets {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 48px; font-weight: 800; letter-spacing: 2px;
+  }
+  .logo-brackets .bracket { color: var(--text-dim); }
+  .logo-brackets .name {
+    background: linear-gradient(135deg, #c4b5fd, #7c3aed, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Logo 4: Bold wordmark */
+  .logo-wordmark {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 56px; font-weight: 900; letter-spacing: -3px;
+    background: linear-gradient(135deg, #e8e4f0 0%, #c4b5fd 40%, #7c3aed 70%, #a78bfa 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+  @keyframes shimmer { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+
+  /* Logo 5: Circuit/Node */
+  .logo-circuit {
+    position: relative; width: 80px; height: 80px;
+  }
+  .logo-circuit svg { width: 100%; height: 100%; }
+  .logo-circuit + .circuit-label {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 20px; font-weight: 800; letter-spacing: 3px;
+    margin-left: 16px;
+    background: linear-gradient(135deg, #c4b5fd, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Logo 6: Minimal slash */
+  .logo-slash {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 44px; font-weight: 800;
+    display: flex; align-items: center; gap: 2px;
+  }
+  .logo-slash .slash { color: var(--accent); font-weight: 300; }
+  .logo-slash .name {
+    background: linear-gradient(135deg, #c4b5fd, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Download button */
+  .download-btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 16px;
+  }
+
+  /* Favicon preview */
+  .favicon-row { display: flex; gap: 16px; align-items: center; }
+  .favicon-preview { width: 32px; height: 32px; border-radius: 6px; }
+</style>
+</head>
+<body>
+
+<h1>AISTK — Logo Options</h1>
+<p class="sub">Click any card to select. Export as SVG or use directly in your site.</p>
+
+<div class="grid">
+
+  <!-- 1: Terminal prompt -->
+  <div class="card">
+    <div class="card-header">
+      Terminal Prompt
+      <span class="tag">Primary Pick</span>
+    </div>
+    <div class="card-body dark">
+      <span class="logo-terminal">
+        <span class="prompt">$</span><span class="name">aistk</span><span class="cursor"></span>
+      </span>
+    </div>
+  </div>
+
+  <!-- 2: Stack blocks -->
+  <div class="card">
+    <div class="card-header">
+      Stack Blocks
+      <span class="tag">Icon</span>
+    </div>
+    <div class="card-body dark">
+      <div style="display:flex;align-items:flex-end;gap:24px;">
+        <div class="logo-stack">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <span class="stack-label">AISTK</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3: Code brackets -->
+  <div class="card">
+    <div class="card-header">
+      Code Brackets
+      <span class="tag">Dev vibe</span>
+    </div>
+    <div class="card-body dark">
+      <span class="logo-brackets">
+        <span class="bracket">{</span><span class="name">AISTK</span><span class="bracket">}</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- 4: Bold wordmark -->
+  <div class="card">
+    <div class="card-header">
+      Bold Wordmark
+      <span class="tag">Clean</span>
+    </div>
+    <div class="card-body dark">
+      <span class="logo-wordmark">AISTK</span>
+    </div>
+  </div>
+
+  <!-- 5: Circuit node -->
+  <div class="card">
+    <div class="card-header">
+      Circuit Node
+      <span class="tag">Favicon</span>
+    </div>
+    <div class="card-body dark">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div class="logo-circuit">
+          <svg viewBox="0 0 80 80" fill="none">
+            <rect x="4" y="4" width="72" height="72" rx="16" stroke="#7c3aed" stroke-width="2.5" fill="none"/>
+            <rect x="16" y="16" width="48" height="48" rx="8" fill="rgba(124,58,237,0.15)"/>
+            <line x1="40" y1="4" x2="40" y2="16" stroke="#a78bfa" stroke-width="2"/>
+            <line x1="40" y1="64" x2="40" y2="76" stroke="#a78bfa" stroke-width="2"/>
+            <line x1="4" y1="40" x2="16" y2="40" stroke="#a78bfa" stroke-width="2"/>
+            <line x1="64" y1="40" x2="76" y2="40" stroke="#a78bfa" stroke-width="2"/>
+            <circle cx="40" cy="40" r="8" fill="#7c3aed"/>
+            <circle cx="40" cy="40" r="3" fill="#06050a"/>
+          </svg>
+        </div>
+        <span class="circuit-label">AISTK</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6: Minimal slash -->
+  <div class="card">
+    <div class="card-header">
+      Minimal Slash
+      <span class="tag">Subtle</span>
+    </div>
+    <div class="card-body dark">
+      <span class="logo-slash">
+        <span class="slash">/</span><span class="name">AISTK</span>
+      </span>
+    </div>
+  </div>
+
+</div>
+
+<p style="margin-top:40px;color:var(--text-dim);font-size:13px;">
+  All logos use the AISTK brand colors (#7c3aed, #a78bfa).<br>
+  To export: right-click any logo → inspect → copy the SVG or HTML. Or tell me which one you want and I'll save it as a standalone file.
+</p>
+
+</body>
+</html>
