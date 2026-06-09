@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AISTK — Manage Editions</title>
+<style>
+  :root {
+    --bg: #06050a; --card: #13102b; --border: #1e1845;
+    --accent: #7c3aed; --accent-glow: #a78bfa;
+    --text: #e8e4f0; --text-dim: #8b85a8; --green: #34d399;
+    --font-mono: 'SF Mono', 'Fira Code', monospace;
+    --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--bg); color: var(--text); font-family: var(--font-sans);
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 24px;
+  }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 40px; max-width: 440px; width: 100%;
+  }
+  h1 { font-size: 22px; margin-bottom: 6px; }
+  .sub { color: var(--text-dim); font-size: 13px; margin-bottom: 28px; font-family: var(--font-mono); }
+  .edition { padding: 16px 0; border-bottom: 1px solid var(--border); }
+  .edition:last-child { border-bottom: none; }
+  .edition-name { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
+  .edition-desc { font-size: 13px; color: var(--text-dim); }
+  .btn {
+    display: inline-block; margin-top: 24px; padding: 14px 28px;
+    background: var(--accent); color: #fff; border: none;
+    border-radius: 10px; font-size: 15px; font-weight: 600;
+    text-decoration: none; cursor: pointer; transition: background 0.2s;
+  }
+  .btn:hover { background: #6d28d9; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Your editions</h1>
+  <p class="sub">$ ./aistk --editions</p>
+
+  <p style="color:var(--text-dim);font-size:14px;margin-bottom:20px;">
+    You're currently receiving <strong>all editions</strong>. To customize which topics you get, reply to any AISTK email with the editions you want:
+  </p>
+
+  <div class="edition">
+    <div class="edition-name">⚡ Core AI</div>
+    <div class="edition-desc">Major model releases, industry moves, big announcements</div>
+  </div>
+  <div class="edition">
+    <div class="edition-name">🔧 Tools & Code</div>
+    <div class="edition-desc">New frameworks, libraries, CLIs, open-source releases</div>
+  </div>
+  <div class="edition">
+    <div class="edition-name">📄 Deep Research</div>
+    <div class="edition-desc">arXiv papers, academic breakthroughs, technical deep-dives</div>
+  </div>
+  <div class="edition">
+    <div class="edition-name">🚀 Startups</div>
+    <div class="edition-desc">Funding rounds, YC launches, AI product launches, market moves</div>
+  </div>
+
+  <a href="https://aistk.io" class="btn">Back to AISTK</a>
+</div>
+</body>
+</html>
